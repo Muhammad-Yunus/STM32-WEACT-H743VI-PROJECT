@@ -1,0 +1,74 @@
+# ==========================================
+# STM32CubeIDE / Eclipse / TrueStudio Outputs
+# ==========================================
+Debug/
+Release/
+*.elf
+*.bin
+*.hex
+*.map
+*.list
+*.o
+*.su
+*.d
+
+# ==========================================
+# STM32CubeMX Config & Logs
+# ==========================================
+# JANGAN abaikan file .ioc karena ini adalah file konfigurasi utama CubeMX Anda
+.mxproject
+*.log
+
+# ==========================================
+# Keil uVision Toolchain Outputs
+# ==========================================
+*.crf
+*.d
+*.o
+*.ko
+*.obj
+*.lst
+*.map
+*.m51
+*.i
+*.lnp
+*.axf
+*.sct
+*.dep
+*.htm
+*.build_log.htm
+*.lnp
+*.vcd
+Listings/
+Objects/
+
+# ==========================================
+# IAR Embedded Workbench Toolchain Outputs
+# ==========================================
+*.dep
+*.pbi
+*.pbd
+*.browse
+*.o
+Settings/
+Debug/List/
+Debug/Obj/
+Release/List/
+Release/Obj/
+
+# ==========================================
+# VS Code / CMake / Ninja (Jika digunakan)
+# ==========================================
+.vscode/
+build/
+CMakeUserPresets.json
+
+# ==========================================
+# Operating System & Local IDE Settings
+# ==========================================
+.settings/
+.project
+.cproject
+*.launch
+.DS_Store
+Thumbs.db
