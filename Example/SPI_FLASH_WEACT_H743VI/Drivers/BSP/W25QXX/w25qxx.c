@@ -25,13 +25,13 @@ uint8_t W25Qx_Init(void)
   * @brief  This function reset the W25Qx.
   * @retval None
   */
-static void	W25Qx_Reset(void)
+void	W25Qx_Reset(void)
 {
 	uint8_t cmd[2] = {RESET_ENABLE_CMD,RESET_MEMORY_CMD};
-	
+
 	W25Qx_Enable();
 	/* Send the reset command */
-	HAL_SPI_Transmit(&hspi1, cmd, 2, W25QXXXX_TIMEOUT_VALUE);	
+	HAL_SPI_Transmit(&hspi1, cmd, 2, W25QXXXX_TIMEOUT_VALUE);
 	W25Qx_Disable();
 
 }
@@ -40,7 +40,7 @@ static void	W25Qx_Reset(void)
   * @brief  Reads current status of the W25QXXXX.
   * @retval W25QXXXX memory status
   */
-static uint8_t W25Qx_GetStatus(void)
+uint8_t W25Qx_GetStatus(void)
 {
 	uint8_t cmd[] = {READ_STATUS_REG1_CMD};
 	uint8_t status;

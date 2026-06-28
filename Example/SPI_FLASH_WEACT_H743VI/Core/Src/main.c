@@ -59,7 +59,7 @@ static void MX_GPIO_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_UART5_Init(void);
 /* USER CODE BEGIN PFP */
-
+void W25Qxx_Demo(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
