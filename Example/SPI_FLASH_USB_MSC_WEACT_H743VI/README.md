@@ -227,14 +227,14 @@ The demo functions (`W25Qxx_Demo()`, `W25QXX_Disk_Test()`) are **commented out**
 ## How It All Fits Together
 
 ```
- ┌─────────────┐    SPI1 @ 24 Mbps    ┌──────────────┐
- │ STM32H743   │ ◄──────────────────► │ W25Q64       │
+ ┌─────────────┐    SPI1 @ 24 Mbps    ┌───────────────┐
+ │ STM32H743   │ ◄──────────────────► │ W25Q64        │
  │ Cortex-M7   │                      │ 8 MB NOR Flash│
- │ 480 MHz     │                      │ PD6 = CS     │
- └──────┬──────┘                      └──────────────┘
+ │ 480 MHz     │                      │ PD6 = CS      │
+ └──────┬──────┘                      └───────────────┘
         │
-        │  DMA1 Stream0/1 (peripheral-triggered)
-        │  (configured in CubeMX, not yet wired in HAL)
+        │  
+        │  
         │
  ┌──────▼──────┐
  │ USB OTG FS  │ ← PA11 (DM), PA12 (DP)
@@ -251,15 +251,8 @@ The demo functions (`W25Qxx_Demo()`, `W25QXX_Disk_Test()`) are **commented out**
 | Peripheral | Settings |
 |------------|----------|
 | **SPI1** | Master, Full-Duplex, 24 MHz baud (prescaler `/2` from 48 MHz APB2), 8-bit, CPOL=0 CPHA=0, NSS=Software |
-| **DMA1 Stream0** (SPI1 RX) | Periph→Mem, Byte, Normal, Low priority |
-| **DMA1 Stream1** (SPI1 TX) | Mem→Periph, Byte, Normal, Low priority |
 | **UART5** | Async, 115200 8N1, No hardware flow |
 | **USB_OTG_FS** | Device Only, MSC class, DMA enabled |
-| **NVIC** | DMA1\_Stream0, DMA1\_Stream1, SPI1, MDMA, USB OTG FS interrupts enabled |
-
-### MDMA Setup (supervisor only — not a DMA replacement)
-
-MDMA channel 0–1 are configured to monitor `DMA1_Stream0_TC` / `DMA1_Stream1_TC`. On the H743, MDMA **cannot** replace DMA1/2 for SPI1 transfers (no native SPI→MDMA request line). It acts as a supervisor that can mask/unmask DMA interrupts atomically between block transfers.
 
 ---
 
@@ -269,12 +262,3 @@ MDMA channel 0–1 are configured to monitor `DMA1_Stream0_TC` / `DMA1_Stream1_T
 2. The project should import cleanly (CubeMX version 6.16.1, FW_H7 v1.12.1)
 3. Build with **Project → Build All** (or Ctrl+B)
 4. Flash via ST‑LINK/V2 (on-board USB debugger) or connect an external probe
-
----
-
-## Known Items to Fix Before Production
-
-1. **W25Q flash size in `w25qxx.h`:** Hardcoded to 4 MB (W25Q32). Change `W25QXXXX_FLASH_SIZE` to `0x800000` (8 MB) and update `SECTOR_COUNT` to 128 for W25Q64.
-2. **DMA buffers not cache-aware:** D-Cache is disabled; if you enable it, all DMA buffers need `__ALIGNED(32)` and cache maintenance (clean/invalidate) in code.
-3. **MPU covers everything as NO\_ACCESS:** The current MPU config disables all memory access. This works because the MPU region 0 covers 4 GB with `NO_ACCESS` but `SubRegionDisable=0x87` enables some subregions. If you plan to use D-Cache, update MPU regions accordingly.
-4. **PB3 (SPI1\_SCK) locked in CubeMX:** PB3 is a JTAG pin (`JTDO/TRACESWO`). It was explicitly locked before assignment. If you later disable JTAG, you could remap to alternate pins.
